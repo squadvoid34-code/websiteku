@@ -3,34 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GalXy PS | News & Download</title>
+    <title>GalXy PS | Fantasy World Fixed</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
 
+        /* FIX: Menghilangkan scrollbar horizontal dan mengatur kelancaran scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            background-color: #0b0c0d;
+            background: linear-gradient(rgba(10, 10, 12, 0.85), rgba(10, 10, 12, 0.85)), 
+                        url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=2000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             color: #ffffff;
             font-family: 'Inter', sans-serif;
             margin: 0;
-            overflow-x: hidden;
+            padding: 0;
+            overflow-x: hidden; /* FIX: Mencegah bug goyang ke samping */
+            min-height: 100vh;
         }
 
-        /* --- Loading Spinner Circular --- */
+        /* --- Loading Spinner --- */
         #loader {
-            position: fixed;
-            inset: 0;
-            background: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            transition: opacity 0.6s ease;
+            position: fixed; inset: 0; background: #000;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 10000; transition: opacity 0.6s ease;
         }
         .spinner {
-            width: 45px;
-            height: 45px;
+            width: 45px; height: 45px;
             border: 3px solid rgba(191, 149, 63, 0.1);
             border-top: 3px solid #bf953f;
             border-radius: 50%;
@@ -38,187 +43,219 @@
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* --- Animasi Kunang-kunang --- */
+        /* --- UI Components --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            transition: transform 0.3s ease, border 0.3s ease;
+        }
+        .glass-card:hover { 
+            border: 1px solid rgba(124, 58, 237, 0.4);
+            transform: translateY(-5px); /* Efek melayang halus */
+        }
+
+        .btn-gold {
+            background: linear-gradient(to right, #bf953f, #fcf6ba, #aa771c);
+            color: #000; font-weight: 800; font-size: 10px;
+            padding: 12px 24px; border-radius: 10px;
+            text-transform: uppercase;
+            display: inline-block;
+            transition: 0.3s;
+        }
+        .btn-gold:hover {
+            filter: brightness(1.1);
+            box-shadow: 0 5px 15px rgba(191, 149, 63, 0.4);
+        }
+
+        /* --- Side Menu FIX --- */
+        #side-menu {
+            position: fixed; top: 0; right: -100%;
+            width: 300px; height: 100vh;
+            background: rgba(10, 10, 12, 0.98);
+            z-index: 5000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 50px 30px; border-left: 1px solid rgba(255,255,255,0.1);
+        }
+        #side-menu.active { right: 0; }
+        .overlay { 
+            position: fixed; inset: 0; background: rgba(0,0,0,0.8); 
+            z-index: 4000; display: none; 
+            backdrop-filter: blur(4px);
+        }
+        .overlay.active { display: block; }
+
+        /* --- Fireflies FIX: Mencegah firefly merusak scroll --- */
         .firefly {
-            position: fixed;
-            width: 2px;
-            height: 2px;
-            background: #ffcc00;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 1;
+            position: fixed; width: 2px; height: 2px;
+            background: #ffcc00; border-radius: 50%;
+            pointer-events: none; z-index: 1;
             box-shadow: 0 0 10px #ffcc00;
             animation: drift linear infinite;
         }
-        @keyframes drift {
-            0% { transform: translateY(0); opacity: 0; }
-            50% { opacity: 0.6; }
-            100% { transform: translateY(-100vh) translateX(20px); opacity: 0; }
-        }
-
-        /* --- Broadcast Style --- */
-        .broadcast-box {
-            background: linear-gradient(90deg, rgba(124, 58, 237, 0.1), rgba(0,0,0,0));
-            border-left: 3px solid #7c3aed;
-            padding: 15px 20px;
-            border-radius: 0 12px 12px 0;
-            margin-bottom: 30px;
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            transition: 0.3s;
-        }
-
-        .btn-action {
-            background: linear-gradient(to right, #bf953f, #fcf6ba, #aa771c);
-            color: #000;
-            font-weight: 800;
-            font-size: 10px;
-            padding: 10px 20px;
-            border-radius: 8px;
-            text-transform: uppercase;
-            box-shadow: 0 4px 15px rgba(191, 149, 63, 0.2);
-        }
-
-        /* --- Side Menu Styling --- */
-        #side-menu {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 280px;
-            height: 100%;
-            background: #111315;
-            z-index: 1000;
-            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border-left: 1px solid rgba(255,255,255,0.05);
-            padding: 40px 30px;
-        }
-        #side-menu.active { right: 0; }
-        .overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.8);
-            z-index: 999;
-            display: none;
-        }
-        .overlay.active { display: block; }
+        @keyframes drift { 0% { transform: translateY(0); opacity: 0; } 50% { opacity: 0.6; } 100% { transform: translateY(-100vh); opacity: 0; } }
     </style>
 </head>
 <body>
 
     <div id="loader"><div class="spinner"></div></div>
 
-    <nav class="fixed top-0 w-full px-8 py-6 flex justify-between items-center z-50 bg-[#0b0c0d]/60 backdrop-blur-lg">
-        <div class="text-xl font-black italic tracking-tighter">
-            GALAXY<span class="text-purple-500 font-bold">PS</span>
+    <nav class="fixed top-0 w-full px-8 py-6 flex justify-between items-center z-[3000] bg-black/40 backdrop-blur-md border-b border-white/5">
+        <div class="text-2xl font-black italic tracking-tighter uppercase">
+            Galaxy<span class="text-purple-500 font-bold">PS</span>
         </div>
-        
-        <button onclick="toggleMenu()" class="bg-white/5 p-3 px-5 rounded-xl border border-white/10 hover:bg-white/10 transition">
+        <button onclick="toggleMenu()" class="glass-card p-3 px-5 border-white/10 hover:bg-white/10 transition">
             <i class="fas fa-bars-staggered text-white text-sm"></i>
         </button>
     </nav>
 
     <div id="side-menu-overlay" class="overlay" onclick="toggleMenu()"></div>
     <div id="side-menu">
-        <div class="flex justify-between items-center mb-10">
-            <h2 class="font-black text-purple-500 italic">MENU</h2>
-            <i class="fas fa-times cursor-pointer text-gray-500" onclick="toggleMenu()"></i>
+        <div class="flex justify-between items-center mb-12">
+            <h2 class="font-black text-purple-500 tracking-widest uppercase italic">Galaxy Menu</h2>
+            <i class="fas fa-times cursor-pointer text-gray-500 text-xl" onclick="toggleMenu()"></i>
         </div>
-        <ul class="space-y-6">
-            <li><a href="#" class="flex items-center gap-3 text-sm font-bold text-gray-400 hover:text-white transition"><i class="fas fa-question-circle text-purple-500 w-5"></i> FAQ</a></li>
-            <li><a href="#" class="flex items-center gap-3 text-sm font-bold text-gray-400 hover:text-white transition"><i class="fas fa-gavel text-purple-500 w-5"></i> Server Rules</a></li>
-            <li><a href="#" class="flex items-center gap-3 text-sm font-bold text-gray-400 hover:text-white transition"><i class="fas fa-store text-purple-500 w-5"></i> Premium Store</a></li>
-            <li><a href="#" class="flex items-center gap-3 text-sm font-bold text-gray-400 hover:text-white transition"><i class="fas fa-user-shield text-purple-500 w-5"></i> Support</a></li>
+        <ul class="space-y-8">
+            <li><a href="#faq" class="flex items-center gap-4 text-sm font-bold text-gray-300 hover:text-purple-400 transition" onclick="toggleMenu()"><i class="fas fa-info-circle"></i> FAQ GalXy</a></li>
+            <li><a href="#rules" class="flex items-center gap-4 text-sm font-bold text-gray-300 hover:text-red-500 transition" onclick="toggleMenu()"><i class="fas fa-gavel"></i> Server Rules</a></li>
+            <li><a href="https://chat.whatsapp.com/G1D8se7FbQkGp62QCKGNQ7" class="flex items-center gap-4 text-sm font-bold text-gray-300 hover:text-green-400 transition" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp Group</a></li>
         </ul>
-        <div class="absolute bottom-10 left-30 text-[9px] text-gray-600 uppercase tracking-widest">
-            v1.2.4 Build-stable
-        </div>
     </div>
 
-    <div class="max-w-4xl mx-auto px-6 pt-32 pb-20 relative z-10">
+    <div class="max-w-4xl mx-auto px-6 pt-36 pb-20 relative z-10">
         
-        <header class="mb-12">
-            <h1 class="text-6xl font-black tracking-tighter uppercase mb-2">GalXy PS</h1>
+        <header class="mb-14">
+            <h1 class="text-7xl font-black tracking-tighter uppercase mb-2 drop-shadow-lg">GalXy PS</h1>
             <div class="flex items-center gap-3">
-                <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Server Status: Online</span>
+                <span class="px-3 py-1 bg-green-500/10 border border-green-500/40 rounded-full text-[9px] font-bold text-green-400 tracking-widest uppercase">Fantasy Realm Online</span>
             </div>
         </header>
 
-        <div class="broadcast-box">
-            <div class="flex items-center gap-3 mb-2">
-                <i class="fas fa-bullhorn text-purple-500 text-xs"></i>
-                <h4 class="text-[11px] font-black uppercase tracking-[0.2em] text-white">Broadcast Information</h4>
-            </div>
-            <p class="text-[12px] text-gray-400 leading-relaxed">
-                Update besar pada <span class="text-purple-400 font-bold">20 Feb 2026</span>: 
-                <span class="text-white italic"> NPC Quest System</span> & 
-                <span class="text-white italic"> New Custom Item Scythe</span>. 
+        <div class="glass-card p-6 border-l-4 border-l-purple-600 mb-10">
+            <h4 class="text-[11px] font-black uppercase tracking-widest text-purple-400 mb-2"><i class="fas fa-bullhorn mr-2"></i> News Update</h4>
+            <p class="text-xs text-gray-300 leading-relaxed">
+                Update <span class="text-white font-bold">20 Feb 2026</span>: Sistem <span class="text-purple-400 font-bold">NPC Quest</span> & <span class="text-purple-400 font-bold">New Scythe Series</span> segera rilis!
             </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            
-            <div class="glass-card p-6 flex flex-col justify-between">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-20">
+            <div class="glass-card p-6 flex flex-col justify-between h-full">
                 <div class="flex items-center gap-4 mb-6">
-                    <div class="w-12 h-12 bg-white/5 border border-white/10 rounded-xl flex justify-center items-center">
-                        <i class="fas fa-file-code text-xl text-yellow-500"></i> </div>
-                    <div>
-                        <h3 class="font-bold text-base text-white">All Host Files</h3>
-                        <p class="text-[9px] text-gray-500 uppercase font-bold tracking-widest">Wajib Untuk Login</p>
-                    </div>
+                    <div class="w-12 h-12 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center text-yellow-500 text-xl"><i class="fas fa-file-invoice"></i></div>
+                    <div><h3 class="font-bold text-base">All Host Files</h3><p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Wajib Untuk Login</p></div>
                 </div>
-                <div class="flex items-center justify-between bg-black/40 p-3 rounded-xl border border-white/5">
-                    <span class="text-[9px] text-gray-500 truncate w-32">gtpshost.com/d/GalXyPS</span>
-                    <a href="https://gtpshost.com/d/GalXyPS" class="btn-action">Download</a>
-                </div>
+                <a href="https://gtpshost.com/d/GalXyPS" class="btn-gold text-center">Download Host</a>
             </div>
-
-            <div class="glass-card p-6 flex flex-col justify-between">
+            <div class="glass-card p-6 flex flex-col justify-between h-full">
                 <div class="flex items-center gap-4 mb-6">
-                    <div class="w-12 h-12 bg-white/5 border border-white/10 rounded-xl flex justify-center items-center">
-                        <i class="fab fa-whatsapp text-2xl text-green-500"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-base text-white">Community Group</h3>
-                        <p class="text-[9px] text-gray-500 uppercase font-bold tracking-widest">Join For Updates</p>
-                    </div>
+                    <div class="w-12 h-12 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center text-green-500 text-2xl"><i class="fab fa-whatsapp"></i></div>
+                    <div><h3 class="font-bold text-base">WhatsApp Group</h3><p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Join Community</p></div>
                 </div>
-                <div class="flex items-center justify-between bg-black/40 p-3 rounded-xl border border-white/5">
-                    <span class="text-[9px] text-gray-500 truncate w-32">chat.whatsapp.com/G1D8...</span>
-                    <a href="https://chat.whatsapp.com/G1D8se7FbQkGp62QCKGNQ7" class="btn-action">Join WA</a>
-                </div>
+                <a href="https://chat.whatsapp.com/G1D8se7FbQkGp62QCKGNQ7" class="btn-gold text-center">Join Group</a>
             </div>
-
         </div>
 
-        <footer class="mt-20 text-center">
-            <p class="text-[8px] text-gray-700 tracking-[0.6em] uppercase font-black">Galaxy Private Server &copy; 2026</p>
+        <section id="rules" class="mb-24 pt-10">
+            <h2 class="text-3xl font-black italic text-red-500 mb-8 uppercase tracking-tighter">SERVER RULES</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass-card p-6 border-t-2 border-t-red-600">
+                    <h3 class="text-lg font-black mb-4 flex items-center gap-2 text-white"><i class="fas fa-users text-red-500"></i> [ PLAYER ]</h3>
+                    <ul class="text-[11px] space-y-3 text-gray-400 font-medium">
+                        <li class="flex gap-2"><span class="text-red-500">•</span> DON'T SCAM</li>
+                        <li class="flex gap-2"><span class="text-red-500">•</span> DON'T MANIP</li>
+                        <li class="flex gap-2"><span class="text-red-500">•</span> DONT MAKE SC PNB BFG KETAWAN KENA BANNED GAK BISA BREAK BLOCK & PUT BLOCK SELAMA 5 DAY</li>
+                        <li class="flex gap-2"><span class="text-red-500">•</span> DON'T TELE</li>
+                        <li class="flex gap-2"><span class="text-red-500">•</span> DON'T TRICK</li>
+                    </ul>
+                </div>
+
+                <div class="glass-card p-6 border-t-2 border-t-purple-600">
+                    <h3 class="text-lg font-black mb-4 flex items-center gap-2 text-white"><i class="fas fa-crown text-purple-500"></i> [ CO-OWNER & WAKIL ]</h3>
+                    <ul class="text-[11px] space-y-3 text-gray-400 font-medium">
+                        <li class="flex gap-2"><span class="text-purple-500">•</span> JANGAN KASI ITEM LENGEND ITEM</li>
+                        <li class="flex gap-2"><span class="text-purple-500">•</span> JANGAN KASIH BARANG BARANG</li>
+                        <li class="flex gap-2"><span class="text-purple-500">•</span> JANGAN KASIH BGL/DL KE PLAYER</li>
+                        <li class="flex gap-2"><span class="text-purple-500">•</span> DON'T MANIP</li>
+                        <li class="flex gap-2"><span class="text-purple-500">•</span> DILARANG BUAT AKUN 2</li>
+                        <li class="flex gap-2"><span class="text-purple-500">•</span> JANGAN SCAM</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-6 p-4 bg-red-600/10 border border-red-600/30 rounded-xl text-center">
+                <p class="text-[10px] font-black text-red-500 uppercase tracking-widest">JIKA NGELANGGAR AKAN KENA BANNED PERMANENT AKUN</p>
+            </div>
+        </section>
+
+        <section id="faq" class="mb-24 pt-10">
+            <h2 class="text-2xl font-black italic text-purple-500 mb-8 uppercase tracking-widest">FAQ GalXy</h2>
+            <div class="space-y-4">
+                
+                <div class="glass-card p-5">
+                    <details class="group cursor-pointer">
+                        <summary class="flex justify-between items-center font-bold text-sm group-open:text-purple-400">
+                            Apa itu GalXy Private Server?
+                            <i class="fas fa-chevron-down text-[10px] transition group-open:rotate-180"></i>
+                        </summary>
+                        <p class="mt-4 text-xs text-gray-400 leading-relaxed border-t border-white/5 pt-4">
+                            GalXy PS adalah Private Server Growtopia bertema Galaksi & Fantasi yang dirancang untuk memberikan pengalaman bermain yang lebih seru, stabil, dan penuh dengan item kustom unik.
+                        </p>
+                    </details>
+                </div>
+
+                <div class="glass-card p-5">
+                    <details class="group cursor-pointer">
+                        <summary class="flex justify-between items-center font-bold text-sm group-open:text-purple-400">
+                            Bagaimana cara bermain di GalXy PS?
+                            <i class="fas fa-chevron-down text-[10px] transition group-open:rotate-180"></i>
+                        </summary>
+                        <p class="mt-4 text-xs text-gray-400 leading-relaxed border-t border-white/5 pt-4">
+                            Cukup download "All Host Files", masukkan ke folder host perangkatmu (system32/drivers/etc atau di Android menggunakan Virtual Hosts), lalu login Growtopia seperti biasa!
+                        </p>
+                    </details>
+                </div>
+
+                <div class="glass-card p-5">
+                    <details class="group cursor-pointer">
+                        <summary class="flex justify-between items-center font-bold text-sm group-open:text-purple-400">
+                            Apakah server ini aman?
+                            <i class="fas fa-chevron-down text-[10px] transition group-open:rotate-180"></i>
+                        </summary>
+                        <p class="mt-4 text-xs text-gray-400 leading-relaxed border-t border-white/5 pt-4">
+                            Sangat aman. Kami tidak pernah meminta password Anda di luar form login. Pastikan Anda tidak membagikan data akun Anda kepada siapapun di dalam game.
+                        </p>
+                    </details>
+                </div>
+
+            </div>
+        </section>
+
+        <footer class="text-center opacity-30 text-[9px] font-bold tracking-[0.5em] uppercase">
+            &copy; 2026 Galaxy PS | Developed for Legend
         </footer>
     </div>
 
     <script>
-        // Toggle Side Menu
+        // Menu Toggle
         function toggleMenu() {
             document.getElementById('side-menu').classList.toggle('active');
             document.getElementById('side-menu-overlay').classList.toggle('active');
+            // Mencegah scroll saat menu terbuka
+            document.body.style.overflow = document.getElementById('side-menu').classList.contains('active') ? 'hidden' : 'auto';
         }
 
-        // Fireflies effect
+        // Fireflies FIX: Membuat firefly secara efisien
         function createFirefly() {
-            const f = document.createElement('div');
-            f.className = 'firefly';
-            f.style.left = Math.random() * 100 + 'vw';
-            f.style.top = '100vh';
+            if (document.hidden) return; // Jangan buat jika tab tidak aktif
+            const f = document.createElement('div'); f.className = 'firefly';
+            f.style.left = Math.random() * 100 + 'vw'; f.style.top = '100vh';
             f.style.animationDuration = (Math.random() * 4 + 6) + 's';
             document.body.appendChild(f);
             setTimeout(() => f.remove(), 8000);
         }
-        setInterval(createFirefly, 500);
+        setInterval(createFirefly, 800);
 
         // Loader hide
         window.onload = () => {
