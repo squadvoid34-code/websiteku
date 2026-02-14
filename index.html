@@ -35,7 +35,6 @@
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 20px;
             transition: 0.3s ease;
         }
-        .glass-card:hover { border: 1px solid rgba(124, 58, 237, 0.4); transform: translateY(-5px); }
 
         .btn-gold {
             background: linear-gradient(to right, #bf953f, #fcf6ba, #aa771c);
@@ -54,12 +53,18 @@
         .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 4000; display: none; }
         .overlay.active { display: block; }
 
-        /* --- Admin Login Modal --- */
-        #login-modal {
-            position: fixed; inset: 0; z-index: 9000; display: none;
-            align-items: center; justify-content: center; background: rgba(0,0,0,0.9);
-            backdrop-filter: blur(10px);
+        /* --- Welcome Ad / Broadcast Modal --- */
+        #welcome-ad {
+            position: fixed; inset: 0; z-index: 9999; display: none;
+            align-items: center; justify-content: center; background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px); padding: 20px;
         }
+        .ad-content {
+            max-width: 400px; width: 100%; background: #0f0f12; border: 1px solid #bf953f;
+            border-radius: 24px; position: relative; overflow: hidden;
+            animation: modalScale 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes modalScale { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
 
         /* --- Fireflies --- */
         .firefly {
@@ -72,6 +77,29 @@
 <body>
 
     <div id="loader"><div class="spinner"></div></div>
+
+    <div id="welcome-ad">
+        <div class="ad-content">
+            <div class="absolute top-4 right-4 z-10">
+                <button onclick="closeAd()" class="w-8 h-8 bg-white/5 rounded-full flex items-center justify-center hover:bg-red-500 transition">
+                    <i class="fas fa-times text-xs"></i>
+                </button>
+            </div>
+            <div class="h-32 bg-gradient-to-br from-purple-900 to-black flex items-center justify-center relative">
+                <i class="fas fa-bullhorn text-4xl text-yellow-500 opacity-50 absolute"></i>
+                <h3 class="text-xl font-black italic tracking-tighter z-10 uppercase">GalXy <span class="text-yellow-500">Update</span></h3>
+            </div>
+            <div class="p-8">
+                <h4 class="text-red-500 font-black text-xs uppercase tracking-widest mb-2">Upcoming Update!</h4>
+                <p class="font-bold text-white text-sm mb-4">Next Update GalXyPS Tanggal 20 Feb:</p>
+                <ul class="text-[11px] text-gray-400 font-bold space-y-2 uppercase mb-6">
+                    <li><i class="fas fa-star text-yellow-500 mr-2"></i> NPC QUEST</li>
+                    <li><i class="fas fa-star text-yellow-500 mr-2"></i> ADD CITEM BARU</li>
+                </ul>
+                <button onclick="closeAd()" class="btn-gold w-full">Siapp Bos!</button>
+            </div>
+        </div>
+    </div>
 
     <nav class="fixed top-0 w-full px-8 py-6 flex justify-between items-center z-[3000] bg-black/40 backdrop-blur-md border-b border-white/5">
         <div class="text-2xl font-black italic tracking-tighter uppercase">GalXy<span class="text-purple-500 font-bold">PS</span></div>
@@ -162,7 +190,7 @@
                 <div class="glass-card p-5">
                     <details class="group cursor-pointer">
                         <summary class="flex justify-between items-center font-bold text-sm group-open:text-purple-400 uppercase">Bagaimana cara bermain di GalXy PS? <i class="fas fa-chevron-down text-[10px] transition group-open:rotate-180"></i></summary>
-                        <p class="mt-4 text-xs text-gray-400 leading-relaxed border-t border-white/5 pt-4">Cukup download "All Host Files", masukkan ke folder host perangkatmu (system32/drivers/etc atau Virtual Hosts), lalu login Growtopia seperti biasa!</p>
+                        <p class="mt-4 text-xs text-gray-400 leading-relaxed border-t border-white/5 pt-4">Cukup download "All Host Files", masukkan ke folder host perangkatmu, lalu login Growtopia seperti biasa!</p>
                     </details>
                 </div>
                 <div class="glass-card p-5">
@@ -179,7 +207,7 @@
         </footer>
     </div>
 
-    <div id="login-modal">
+    <div id="login-modal" class="fixed inset-0 z-[9000] hidden items-center justify-center bg-black/90 backdrop-blur-lg">
         <div class="glass-card p-8 w-[320px] text-center border-white/20">
             <i class="fas fa-user-shield text-red-500 text-4xl mb-4"></i>
             <h2 class="text-white font-black uppercase text-sm mb-6 tracking-widest">Admin Login</h2>
@@ -192,7 +220,7 @@
     <div id="admin-page" class="fixed inset-0 bg-[#0a0a0c] z-[9500] hidden overflow-y-auto pt-24 px-6">
         <div class="max-w-xl mx-auto">
             <div class="flex items-center justify-between mb-10">
-                <h1 class="text-2xl font-black text-red-500 italic uppercase italic">Admin Panel GalXy</h1>
+                <h1 class="text-2xl font-black text-red-500 italic uppercase">Admin Panel GalXy</h1>
                 <button onclick="closeAdmin()" class="text-xs font-bold text-gray-400 border border-white/10 px-4 py-2 rounded-lg hover:bg-white/5 transition">BACK</button>
             </div>
             <div class="glass-card p-8 border-l-4 border-l-red-600">
@@ -216,29 +244,25 @@
 
         function openLogin() {
             toggleMenu();
-            document.getElementById('login-modal').style.display = 'flex';
+            document.getElementById('login-modal').classList.replace('hidden', 'flex');
         }
 
         function closeLogin() {
-            document.getElementById('login-modal').style.display = 'none';
+            document.getElementById('login-modal').classList.replace('flex', 'hidden');
             document.getElementById('passInput').value = "";
         }
 
         function checkPass() {
-            const input = document.getElementById('passInput').value;
-            if(input === PASSWORD_ADMIN) {
-                document.getElementById('login-modal').style.display = 'none';
+            if(document.getElementById('passInput').value === PASSWORD_ADMIN) {
+                document.getElementById('login-modal').classList.replace('flex', 'hidden');
                 document.getElementById('admin-page').style.display = 'block';
                 document.body.style.overflow = 'hidden';
-            } else {
-                alert("Password Salah!");
-            }
+            } else { alert("Password Salah!"); }
         }
 
         function closeAdmin() {
             document.getElementById('admin-page').style.display = 'none';
             document.body.style.overflow = 'auto';
-            document.getElementById('passInput').value = "";
         }
 
         function setStatus(status) {
@@ -253,8 +277,13 @@
                 display.className = "px-4 py-1.5 bg-red-500/10 border border-red-600/40 rounded-full text-[10px] font-black text-red-500 tracking-widest uppercase";
                 display.innerText = "Status Server GalXyPS : OFFLINE";
             }
-            alert("Status Server Berhasil Diubah!");
             closeAdmin();
+        }
+
+        // --- Ad Functions ---
+        function closeAd() {
+            document.getElementById('welcome-ad').style.display = 'none';
+            document.body.style.overflow = 'auto';
         }
 
         function createFirefly() {
@@ -269,9 +298,13 @@
 
         window.onload = () => {
             setTimeout(() => {
-                const loader = document.getElementById('loader');
-                loader.style.opacity = '0';
-                setTimeout(() => loader.style.display = 'none', 600);
+                document.getElementById('loader').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loader').style.display = 'none';
+                    // Munculkan Ad setelah loader hilang
+                    document.getElementById('welcome-ad').style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                }, 600);
             }, 1000);
         };
     </script>
