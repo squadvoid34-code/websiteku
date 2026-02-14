@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GalXy PS | News & Download</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
+        body {
+            background-color: #0b0c0d;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* --- Loading Spinner Circular --- */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: opacity 0.6s ease;
+        }
+        .spinner {
+            width: 45px;
+            height: 45px;
+            border: 3px solid rgba(191, 149, 63, 0.1);
+            border-top: 3px solid #bf953f;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- Animasi Kunang-kunang --- */
+        .firefly {
+            position: fixed;
+            width: 2px;
+            height: 2px;
+            background: #ffcc00;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            box-shadow: 0 0 10px #ffcc00;
+            animation: drift linear infinite;
+        }
+        @keyframes drift {
+            0% { transform: translateY(0); opacity: 0; }
+            50% { opacity: 0.6; }
+            100% { transform: translateY(-100vh) translateX(20px); opacity: 0; }
+        }
+
+        /* --- Broadcast Style --- */
+        .broadcast-box {
+            background: linear-gradient(90deg, rgba(124, 58, 237, 0.1), rgba(0,0,0,0));
+            border-left: 3px solid #7c3aed;
+            padding: 15px 20px;
+            border-radius: 0 12px 12px 0;
+            margin-bottom: 30px;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            transition: 0.3s;
+        }
+
+        .btn-action {
+            background: linear-gradient(to right, #bf953f, #fcf6ba, #aa771c);
+            color: #000;
+            font-weight: 800;
+            font-size: 10px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(191, 149, 63, 0.2);
+        }
+
+        /* --- Side Menu Styling --- */
+        #side-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 280px;
+            height: 100%;
+            background: #111315;
+            z-index: 1000;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 1px solid rgba(255,255,255,0.05);
+            padding: 40px 30px;
+        }
+        #side-menu.active { right: 0; }
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 999;
+            display: none;
+        }
+        .overlay.active { display: block; }
+    </style>
+</head>
+<body>
+
+    <div id="loader"><div class="spinner"></div></div>
+
+    <nav class="fixed top-0 w-full px-8 py-6 flex justify-between items-center z-50 bg-[#0b0c0d]/60 backdrop-blur-lg">
+        <div class="text-xl font-black italic tracking-tighter">
+            GALAXY<span class="text-purple-500 font-bold">PS</span>
+        </div>
+        
+        <button onclick="toggleMenu()" class="bg-white/5 p-3 px-5 rounded-xl border border-white/10 hover:bg-white/10 transition">
+            <i class="fas fa-bars-staggered text-white text-sm"></i>
+        </button>
+    </nav>
+
+    <div id="side-menu-overlay" class="overlay" onclick="toggleMenu()"></div>
+    <div id="side-menu">
+        <div class="flex justify-between items-center mb-10">
+            <h2 class="font-black text-purple-500 italic">MENU</h2>
+            <i class="fas fa-times cursor-pointer text-gray-500" onclick="toggleMenu()"></i>
+        </div>
+        <ul class="space-y-6">
+            <li><a href="#" class="flex items-center gap-3 text-sm font-bold text-gray-400 hover:text-white transition"><i class="fas fa-question-circle text-purple-500 w-5"></i> FAQ</a></li>
+            <li><a href="#" class="flex items-center gap-3 text-sm font-bold text-gray-400 hover:text-white transition"><i class="fas fa-gavel text-purple-500 w-5"></i> Server Rules</a></li>
+            <li><a href="#" class="flex items-center gap-3 text-sm font-bold text-gray-400 hover:text-white transition"><i class="fas fa-store text-purple-500 w-5"></i> Premium Store</a></li>
+            <li><a href="#" class="flex items-center gap-3 text-sm font-bold text-gray-400 hover:text-white transition"><i class="fas fa-user-shield text-purple-500 w-5"></i> Support</a></li>
+        </ul>
+        <div class="absolute bottom-10 left-30 text-[9px] text-gray-600 uppercase tracking-widest">
+            v1.2.4 Build-stable
+        </div>
+    </div>
+
+    <div class="max-w-4xl mx-auto px-6 pt-32 pb-20 relative z-10">
+        
+        <header class="mb-12">
+            <h1 class="text-6xl font-black tracking-tighter uppercase mb-2">GalXy PS</h1>
+            <div class="flex items-center gap-3">
+                <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Server Status: Online</span>
+            </div>
+        </header>
+
+        <div class="broadcast-box">
+            <div class="flex items-center gap-3 mb-2">
+                <i class="fas fa-bullhorn text-purple-500 text-xs"></i>
+                <h4 class="text-[11px] font-black uppercase tracking-[0.2em] text-white">Broadcast Information</h4>
+            </div>
+            <p class="text-[12px] text-gray-400 leading-relaxed">
+                Update besar pada <span class="text-purple-400 font-bold">20 Feb 2026</span>: 
+                <span class="text-white italic"> NPC Quest System</span> & 
+                <span class="text-white italic"> New Custom Item Scythe</span>. 
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            
+            <div class="glass-card p-6 flex flex-col justify-between">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-12 h-12 bg-white/5 border border-white/10 rounded-xl flex justify-center items-center">
+                        <i class="fas fa-file-code text-xl text-yellow-500"></i> </div>
+                    <div>
+                        <h3 class="font-bold text-base text-white">All Host Files</h3>
+                        <p class="text-[9px] text-gray-500 uppercase font-bold tracking-widest">Wajib Untuk Login</p>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between bg-black/40 p-3 rounded-xl border border-white/5">
+                    <span class="text-[9px] text-gray-500 truncate w-32">gtpshost.com/d/GalXyPS</span>
+                    <a href="https://gtpshost.com/d/GalXyPS" class="btn-action">Download</a>
+                </div>
+            </div>
+
+            <div class="glass-card p-6 flex flex-col justify-between">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-12 h-12 bg-white/5 border border-white/10 rounded-xl flex justify-center items-center">
+                        <i class="fab fa-whatsapp text-2xl text-green-500"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-base text-white">Community Group</h3>
+                        <p class="text-[9px] text-gray-500 uppercase font-bold tracking-widest">Join For Updates</p>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between bg-black/40 p-3 rounded-xl border border-white/5">
+                    <span class="text-[9px] text-gray-500 truncate w-32">chat.whatsapp.com/G1D8...</span>
+                    <a href="https://chat.whatsapp.com/G1D8se7FbQkGp62QCKGNQ7" class="btn-action">Join WA</a>
+                </div>
+            </div>
+
+        </div>
+
+        <footer class="mt-20 text-center">
+            <p class="text-[8px] text-gray-700 tracking-[0.6em] uppercase font-black">Galaxy Private Server &copy; 2026</p>
+        </footer>
+    </div>
+
+    <script>
+        // Toggle Side Menu
+        function toggleMenu() {
+            document.getElementById('side-menu').classList.toggle('active');
+            document.getElementById('side-menu-overlay').classList.toggle('active');
+        }
+
+        // Fireflies effect
+        function createFirefly() {
+            const f = document.createElement('div');
+            f.className = 'firefly';
+            f.style.left = Math.random() * 100 + 'vw';
+            f.style.top = '100vh';
+            f.style.animationDuration = (Math.random() * 4 + 6) + 's';
+            document.body.appendChild(f);
+            setTimeout(() => f.remove(), 8000);
+        }
+        setInterval(createFirefly, 500);
+
+        // Loader hide
+        window.onload = () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 600);
+            }, 1000);
+        };
+    </script>
+</body>
+</html>
