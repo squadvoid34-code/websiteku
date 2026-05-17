@@ -1,312 +1,157 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GalXy PS | Fantasy World</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VelQuinTopia</title>
 
-        html { scroll-behavior: smooth; }
-        body {
-            background: linear-gradient(rgba(10, 10, 12, 0.85), rgba(10, 10, 12, 0.85)), 
-                        url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=2000&auto=format&fit=crop');
-            background-size: cover; background-position: center; background-attachment: fixed;
-            color: #ffffff; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; min-height: 100vh;
-        }
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-        /* --- Loading Spinner --- */
-        #loader {
-            position: fixed; inset: 0; background: #000;
-            display: flex; justify-content: center; align-items: center;
-            z-index: 10000; transition: opacity 0.6s ease;
-        }
-        .spinner {
-            width: 45px; height: 45px; border: 3px solid rgba(191, 149, 63, 0.1);
-            border-top: 3px solid #bf953f; border-radius: 50%; animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background: linear-gradient(rgba(0,0,0,.85),rgba(0,0,0,.9)),
+    url('https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=2000&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color:white;
+}
 
-        /* --- UI Components --- */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 20px;
-            transition: 0.3s ease;
-        }
+.card{
+    background: rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+}
 
-        .btn-gold {
-            background: linear-gradient(to right, #bf953f, #fcf6ba, #aa771c);
-            color: #000; font-weight: 800; font-size: 10px;
-            padding: 12px 24px; border-radius: 10px; text-transform: uppercase;
-            transition: 0.3s; text-align: center;
-        }
+.btn{
+    background: linear-gradient(to right,#8b5cf6,#6366f1);
+    transition:.3s;
+}
 
-        /* --- Side Menu --- */
-        #side-menu {
-            position: fixed; top: 0; right: -100%; width: 300px; height: 100vh;
-            background: rgba(10, 10, 12, 0.98); z-index: 5000; transition: 0.4s ease;
-            padding: 50px 30px; border-left: 1px solid rgba(255,255,255,0.1);
-        }
-        #side-menu.active { right: 0; }
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 4000; display: none; }
-        .overlay.active { display: block; }
-
-        /* --- Welcome Ad / Broadcast Modal --- */
-        #welcome-ad {
-            position: fixed; inset: 0; z-index: 9999; display: none;
-            align-items: center; justify-content: center; background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(8px); padding: 20px;
-        }
-        .ad-content {
-            max-width: 400px; width: 100%; background: #0f0f12; border: 1px solid #bf953f;
-            border-radius: 24px; position: relative; overflow: hidden;
-            animation: modalScale 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        @keyframes modalScale { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
-
-        /* --- Fireflies --- */
-        .firefly {
-            position: fixed; width: 2px; height: 2px; background: #ffcc00; border-radius: 50%;
-            pointer-events: none; z-index: 1; box-shadow: 0 0 10px #ffcc00; animation: drift linear infinite;
-        }
-        @keyframes drift { 0% { transform: translateY(0); opacity: 0; } 50% { opacity: 0.6; } 100% { transform: translateY(-100vh); opacity: 0; } }
-    </style>
+.btn:hover{
+    transform: scale(1.03);
+}
+</style>
 </head>
+
 <body>
 
-    <div id="loader"><div class="spinner"></div></div>
+<!-- NAVBAR -->
+<nav class="w-full p-5 flex justify-between items-center border-b border-white/10 bg-black/30 backdrop-blur-md fixed top-0 z-50">
+    <h1 class="text-2xl font-black uppercase tracking-wider">
+        VelQuin<span class="text-purple-400">Topia</span>
+    </h1>
 
-    <div id="welcome-ad">
-        <div class="ad-content">
-            <div class="absolute top-4 right-4 z-10">
-                <button onclick="closeAd()" class="w-8 h-8 bg-white/5 rounded-full flex items-center justify-center hover:bg-red-500 transition">
-                    <i class="fas fa-times text-xs"></i>
-                </button>
-            </div>
-            <div class="h-32 bg-gradient-to-br from-purple-900 to-black flex items-center justify-center relative">
-                <i class="fas fa-bullhorn text-4xl text-yellow-500 opacity-50 absolute"></i>
-                <h3 class="text-xl font-black italic tracking-tighter z-10 uppercase">GalXy - <span class="text-blue-500">PS</span></h3>
-            </div>
-            <div class="p-8">
-                <h4 class="text-red-500 font-black text-xs uppercase tracking-widest mb-2">Selamat datang!</h4>
-                <p class="font-bold text-white text-sm mb-4">Server masih tahap BETA:</p>
-                <ul class="text-[11px] text-gray-400 font-bold space-y-2 uppercase mb-6">
-                    <li><i class="fas fa-star text-yellow-500 mr-2"></i> Maaf jika ada bug</li>
-                    <li><i class="fas fa-star text-yellow-500 mr-2"></i> ADD CITEM 500+</li>
-                </ul>
-                <button onclick="closeAd()" class="btn-gold w-full">Siapp Bos!</button>
-            </div>
+    <span class="text-[11px] bg-green-500/20 border border-green-500/30 px-4 py-2 rounded-full font-bold text-green-400 uppercase">
+        Server Online
+    </span>
+</nav>
+
+<!-- CONTENT -->
+<div class="max-w-5xl mx-auto px-5 pt-32 pb-20">
+
+    <!-- HERO -->
+    <div class="text-center mb-16">
+        <h1 class="text-6xl md:text-7xl font-black uppercase">
+            VelQuinTopia
+        </h1>
+
+        <p class="text-gray-400 mt-4 text-sm uppercase tracking-[4px]">
+            Growtopia Private Server
+        </p>
+    </div>
+
+    <!-- BUTTONS -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- APK -->
+        <div class="card rounded-3xl p-6">
+            <i class="fab fa-android text-4xl text-green-400 mb-5"></i>
+
+            <h2 class="text-2xl font-bold mb-2">Download APK</h2>
+
+            <p class="text-gray-400 text-sm mb-6">
+                VelQuinTopia Season 3 Android
+            </p>
+
+            <a href="https://www.mediafire.com/file/saih9so43472rc8/VelQuinTopia+[SEASON+3].apk/file"
+            class="btn block text-center py-3 rounded-xl font-bold uppercase">
+                Download
+            </a>
+        </div>
+
+        <!-- VHOST -->
+        <div class="card rounded-3xl p-6">
+            <i class="fas fa-server text-4xl text-blue-400 mb-5"></i>
+
+            <h2 class="text-2xl font-bold mb-2">VHOST</h2>
+
+            <p class="text-gray-400 text-sm mb-6">
+                Download host file terbaru
+            </p>
+
+            <a href="https://www.mediafire.com/file/xeubtjp2zfzhh1k/Velquintopia.txt/file"
+            class="btn block text-center py-3 rounded-xl font-bold uppercase">
+                Download
+            </a>
+        </div>
+
+        <!-- PTUNNEL -->
+        <div class="card rounded-3xl p-6">
+            <i class="fas fa-globe text-4xl text-yellow-400 mb-5"></i>
+
+            <h2 class="text-2xl font-bold mb-2">PTUNNEL</h2>
+
+            <p class="text-gray-400 text-sm mb-6">
+                Android Tunnel Login
+            </p>
+
+            <a href="https://dash.gtps.cloud/android/2029"
+            class="btn block text-center py-3 rounded-xl font-bold uppercase">
+                Open PTUNNEL
+            </a>
+        </div>
+
+        <!-- IOS -->
+        <div class="card rounded-3xl p-6">
+            <i class="fab fa-apple text-4xl text-gray-200 mb-5"></i>
+
+            <h2 class="text-2xl font-bold mb-2">IOS LINK</h2>
+
+            <p class="text-gray-400 text-sm mb-6">
+                iPhone & iPad Support
+            </p>
+
+            <a href="https://dash.gtps.cloud/ios/2029"
+            class="btn block text-center py-3 rounded-xl font-bold uppercase">
+                Open IOS
+            </a>
+        </div>
+
+    </div>
+
+    <!-- WINDOWS -->
+    <div class="card rounded-3xl p-8 mt-10">
+        <h2 class="text-3xl font-black mb-6 uppercase text-purple-400">
+            Windows / macOS
+        </h2>
+
+        <div class="bg-black/40 p-5 rounded-2xl text-sm text-gray-300 space-y-2 break-all">
+            <p>91.134.85.13 growtopia1.com</p>
+            <p>91.134.85.13 growtopia2.com</p>
+            <p>91.134.85.13 www.growtopia1.com</p>
+            <p>91.134.85.13 www.growtopia2.com</p>
         </div>
     </div>
 
-    <nav class="fixed top-0 w-full px-8 py-6 flex justify-between items-center z-[3000] bg-black/40 backdrop-blur-md border-b border-white/5">
-        <div class="text-2xl font-black italic tracking-tighter uppercase">GalXy<span class="text-purple-500 font-bold">PS</span></div>
-        <button onclick="toggleMenu()" class="glass-card p-3 px-5 border-white/10 hover:bg-white/10 transition">
-            <i class="fas fa-bars-staggered text-white text-sm"></i>
-        </button>
-    </nav>
+    <!-- FOOTER -->
+    <footer class="text-center mt-16 text-gray-500 text-xs uppercase tracking-[4px]">
+        © 2026 VelQuinTopia | By MalDev
+    </footer>
 
-    <div id="side-menu-overlay" class="overlay" onclick="toggleMenu()"></div>
-    <div id="side-menu">
-        <div class="flex justify-between items-center mb-12">
-            <h2 class="font-black text-purple-500 tracking-widest uppercase italic">GalXy Menu</h2>
-            <i class="fas fa-times cursor-pointer text-gray-500 text-xl" onclick="toggleMenu()"></i>
-        </div>
-        <ul class="space-y-8">
-            <li><a href="#main-page" class="flex items-center gap-4 text-sm font-bold text-gray-300 hover:text-purple-400 transition" onclick="toggleMenu()"><i class="fas fa-home"></i> Home</a></li>
-            <li><a href="javascript:void(0)" onclick="openLogin()" class="flex items-center gap-4 text-sm font-bold text-red-500 hover:bg-red-500/10 p-2 rounded-lg transition"><i class="fas fa-user-shield"></i> Admin Panel</a></li>
-            <hr class="border-white/5">
-            <li><a href="#rules" class="flex items-center gap-4 text-sm font-bold text-gray-300 hover:text-red-500 transition" onclick="toggleMenu()"><i class="fas fa-gavel"></i> Server Rules</a></li>
-            <li><a href="#faq" class="flex items-center gap-4 text-sm font-bold text-gray-300 hover:text-purple-400 transition" onclick="toggleMenu()"><i class="fas fa-info-circle"></i> FAQ GalXy</a></li>
-        </ul>
-    </div>
+</div>
 
-    <div id="main-page" class="max-w-4xl mx-auto px-6 pt-36 pb-20 relative z-10">
-        
-        <header class="mb-14">
-            <h1 class="text-7xl font-black tracking-tighter uppercase mb-2">GalXy PS</h1>
-            <div id="server-status-container">
-                <span id="display-status" class="px-4 py-1.5 bg-green-500/10 border border-green-500/40 rounded-full text-[10px] font-black text-green-400 tracking-widest uppercase">
-                   Status Server GalXyPS : ONLINE
-                </span>
-            </div>
-        </header>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-20">
-            <div class="glass-card p-6 flex flex-col justify-between h-48">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center text-yellow-500 text-xl"><i class="fas fa-file-invoice"></i></div>
-                    <div><h3 class="font-bold text-base text-white">All Host Files</h3><p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Wajib Untuk Login</p></div>
-                </div>
-                <a href="https://gtpshost.com/d/GalXyPS" class="btn-gold">Download Host</a>
-            </div>
-            <div class="glass-card p-6 flex flex-col justify-between h-48">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center text-green-500 text-2xl"><i class="fab fa-whatsapp"></i></div>
-                    <div><h3 class="font-bold text-base text-white">WhatsApp Group</h3><p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Join Community</p></div>
-                </div>
-                <a href="https://chat.whatsapp.com/G1D8se7FbQkGp62QCKGNQ7" class="btn-gold">Join Group</a>
-            </div>
-        </div>
-
-        <section id="rules" class="mb-24 pt-10">
-            <h2 class="text-3xl font-black italic text-red-500 mb-8 uppercase tracking-tighter">SERVER RULES</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="glass-card p-6 border-t-2 border-t-red-600">
-                    <h3 class="text-lg font-black mb-4 flex items-center gap-2"><i class="fas fa-users text-red-500"></i> [ PLAYER ]</h3>
-                    <ul class="text-[11px] space-y-3 text-gray-400 font-medium uppercase">
-                        <li><span class="text-red-500 font-bold">•</span> DON'T SCAM</li>
-                        <li><span class="text-red-500 font-bold">•</span> DON'T MANIP</li>
-                        <li><span class="text-red-500 font-bold">•</span> DONT MAKE SC PNB BFG KETAWAN KENA BANNED GAK BISA BREAK BLOCK & PUT BLOCK SELAMA 5 DAY</li>
-                        <li><span class="text-red-500 font-bold">•</span> DON'T TELE</li>
-                        <li><span class="text-red-500 font-bold">•</span> DON'T TRICK</li>
-                    </ul>
-                </div>
-                <div class="glass-card p-6 border-t-2 border-t-purple-600">
-                    <h3 class="text-lg font-black mb-4 flex items-center gap-2"><i class="fas fa-crown text-purple-500"></i> [ CO-OWNER & WAKIL ]</h3>
-                    <ul class="text-[11px] space-y-3 text-gray-400 font-medium uppercase">
-                        <li><span class="text-purple-500 font-bold">•</span> JANGAN KASI ITEM LENGEND ITEM</li>
-                        <li><span class="text-purple-500 font-bold">•</span> JANGAN KASIH BARANG BARANG</li>
-                        <li><span class="text-purple-500 font-bold">•</span> JANGAN KASIH BGL/DL KE PLAYER</li>
-                        <li><span class="text-purple-500 font-bold">•</span> DON'T MANIP</li>
-                        <li><span class="text-purple-500 font-bold">•</span> DILARANG BUAT AKUN 2</li>
-                        <li><span class="text-purple-500 font-bold">•</span> JANGAN SCAM</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <section id="faq" class="mb-24 pt-10">
-            <h2 class="text-2xl font-black italic text-purple-500 mb-8 uppercase tracking-widest">FAQ GalXy</h2>
-            <div class="space-y-4">
-                <div class="glass-card p-5">
-                    <details class="group cursor-pointer">
-                        <summary class="flex justify-between items-center font-bold text-sm group-open:text-purple-400 uppercase">Apa itu GalXy Private Server? <i class="fas fa-chevron-down text-[10px] transition group-open:rotate-180"></i></summary>
-                        <p class="mt-4 text-xs text-gray-400 leading-relaxed border-t border-white/5 pt-4">GalXy PS adalah Private Server Growtopia bertema Galaksi & Fantasi yang dirancang untuk memberikan pengalaman bermain yang lebih seru, stabil, dan penuh dengan item kustom unik.</p>
-                    </details>
-                </div>
-                <div class="glass-card p-5">
-                    <details class="group cursor-pointer">
-                        <summary class="flex justify-between items-center font-bold text-sm group-open:text-purple-400 uppercase">Bagaimana cara bermain di GalXy PS? <i class="fas fa-chevron-down text-[10px] transition group-open:rotate-180"></i></summary>
-                        <p class="mt-4 text-xs text-gray-400 leading-relaxed border-t border-white/5 pt-4">Cukup download "All Host Files", masukkan ke folder host perangkatmu, lalu login Growtopia seperti biasa!</p>
-                    </details>
-                </div>
-                <div class="glass-card p-5">
-                    <details class="group cursor-pointer">
-                        <summary class="flex justify-between items-center font-bold text-sm group-open:text-purple-400 uppercase">Apakah server ini aman? <i class="fas fa-chevron-down text-[10px] transition group-open:rotate-180"></i></summary>
-                        <p class="mt-4 text-xs text-gray-400 leading-relaxed border-t border-white/5 pt-4">Sangat aman. Keamanan akun Anda adalah prioritas kami. Namun, jangan pernah memberikan data akun kepada siapapun termasuk staff.</p>
-                    </details>
-                </div>
-            </div>
-        </section>
-
-        <footer class="text-center opacity-30 text-[9px] font-bold tracking-[0.5em] uppercase">
-            &copy; 2026 GalXy PS | Server By @MalDev
-        </footer>
-    </div>
-
-    <div id="login-modal" class="fixed inset-0 z-[9000] hidden items-center justify-center bg-black/90 backdrop-blur-lg">
-        <div class="glass-card p-8 w-[320px] text-center border-white/20">
-            <i class="fas fa-user-shield text-red-500 text-4xl mb-4"></i>
-            <h2 class="text-white font-black uppercase text-sm mb-6 tracking-widest">Admin Login</h2>
-            <input type="password" id="passInput" class="w-full bg-white/5 border border-white/10 p-3 rounded-lg text-white text-center mb-4 outline-none focus:border-red-500 transition" placeholder="ENTER PASSWORD">
-            <button onclick="checkPass()" class="btn-gold w-full mb-3">Login</button>
-            <button onclick="closeLogin()" class="text-[9px] text-gray-500 font-bold uppercase hover:text-white transition">Cancel</button>
-        </div>
-    </div>
-
-    <div id="admin-page" class="fixed inset-0 bg-[#0a0a0c] z-[9500] hidden overflow-y-auto pt-24 px-6">
-        <div class="max-w-xl mx-auto">
-            <div class="flex items-center justify-between mb-10">
-                <h1 class="text-2xl font-black text-red-500 italic uppercase">Admin Panel GalXy</h1>
-                <button onclick="closeAdmin()" class="text-xs font-bold text-gray-400 border border-white/10 px-4 py-2 rounded-lg hover:bg-white/5 transition">BACK</button>
-            </div>
-            <div class="glass-card p-8 border-l-4 border-l-red-600">
-                <h3 class="font-black text-sm mb-6 uppercase tracking-widest">Change Server Status</h3>
-                <div class="space-y-4">
-                    <button onclick="setStatus('ONLINE')" class="w-full bg-green-500/10 text-green-400 p-4 rounded-xl font-black text-[10px] border border-green-500/20 hover:bg-green-500 hover:text-black transition uppercase">Online</button>
-                    <button onclick="setStatus('MAINTENANCE')" class="w-full bg-yellow-500/10 text-yellow-400 p-4 rounded-xl font-black text-[10px] border border-yellow-500/20 hover:bg-yellow-500 hover:text-black transition uppercase">Maintenance</button>
-                    <button onclick="setStatus('OFFLINE')" class="w-full bg-red-500/10 text-red-400 p-4 rounded-xl font-black text-[10px] border border-red-500/20 hover:bg-red-500 hover:text-black transition uppercase">Offline</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const PASSWORD_ADMIN = "whitegaming";
-
-        function toggleMenu() {
-            document.getElementById('side-menu').classList.toggle('active');
-            document.getElementById('side-menu-overlay').classList.toggle('active');
-        }
-
-        function openLogin() {
-            toggleMenu();
-            document.getElementById('login-modal').classList.replace('hidden', 'flex');
-        }
-
-        function closeLogin() {
-            document.getElementById('login-modal').classList.replace('flex', 'hidden');
-            document.getElementById('passInput').value = "";
-        }
-
-        function checkPass() {
-            if(document.getElementById('passInput').value === PASSWORD_ADMIN) {
-                document.getElementById('login-modal').classList.replace('flex', 'hidden');
-                document.getElementById('admin-page').style.display = 'block';
-                document.body.style.overflow = 'hidden';
-            } else { alert("Password Salah!"); }
-        }
-
-        function closeAdmin() {
-            document.getElementById('admin-page').style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-
-        function setStatus(status) {
-            const display = document.getElementById('display-status');
-            if(status === 'ONLINE') {
-                display.className = "px-4 py-1.5 bg-green-500/10 border border-green-500/40 rounded-full text-[10px] font-black text-green-400 tracking-widest uppercase";
-                display.innerText = "Status Server GalXyPS : ONLINE";
-            } else if(status === 'MAINTENANCE') {
-                display.className = "px-4 py-1.5 bg-yellow-500/10 border border-yellow-500/40 rounded-full text-[10px] font-black text-yellow-400 tracking-widest uppercase";
-                display.innerText = "Status Server GalXyPS : MAINTENANCE";
-            } else {
-                display.className = "px-4 py-1.5 bg-red-500/10 border border-red-600/40 rounded-full text-[10px] font-black text-red-500 tracking-widest uppercase";
-                display.innerText = "Status Server GalXyPS : OFFLINE";
-            }
-            closeAdmin();
-        }
-
-        // --- Ad Functions ---
-        function closeAd() {
-            document.getElementById('welcome-ad').style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-
-        function createFirefly() {
-            if (document.hidden) return;
-            const f = document.createElement('div'); f.className = 'firefly';
-            f.style.left = Math.random() * 100 + 'vw'; f.style.top = '100vh';
-            f.style.animationDuration = (Math.random() * 4 + 6) + 's';
-            document.body.appendChild(f);
-            setTimeout(() => f.remove(), 8000);
-        }
-        setInterval(createFirefly, 800);
-
-        window.onload = () => {
-            setTimeout(() => {
-                document.getElementById('loader').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('loader').style.display = 'none';
-                    // Munculkan Ad setelah loader hilang
-                    document.getElementById('welcome-ad').style.display = 'flex';
-                    document.body.style.overflow = 'hidden';
-                }, 600);
-            }, 1000);
-        };
-    </script>
 </body>
 </html>
