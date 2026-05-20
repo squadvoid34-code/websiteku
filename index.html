@@ -3,334 +3,493 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Velquintopia - Growtopia Private Server</title>
+  <title>Velquintopia</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  
+
   <style>
     :root {
       --primary: #00ff88;
       --primary-dark: #00cc66;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    
-    body {
-      font-family: 'Inter', sans-serif;
-      color: #fff;
-      min-height: 100vh;
-      overflow-x: hidden;
-      background: #0a0a0a;
-      position: relative;
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
     }
 
-    #bg-video {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: -2;
-      filter: brightness(0.55) saturate(1.2);
+    body{
+      font-family:'Inter',sans-serif;
+      color:#fff;
+      min-height:100vh;
+      overflow-x:hidden;
+      background:#0a0a0a;
+      position:relative;
+    }
+
+    #bg-video{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      z-index:-2;
+      filter:brightness(0.55) saturate(1.2);
     }
 
     /* Mata */
-    .eye-container {
-      position: fixed;
-      top: 85px;
-      right: 35px;
-      width: 85px;
-      height: 85px;
-      z-index: 999;
-      border-radius: 50%;
-      overflow: hidden;
-      box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
-      border: 3px solid rgba(0, 255, 136, 0.4);
-      transition: transform 0.1s ease-out;
+    .eye-container{
+      position:fixed;
+      top:85px;
+      right:35px;
+      width:85px;
+      height:85px;
+      z-index:999;
+      border-radius:50%;
+      overflow:hidden;
+      box-shadow:0 0 20px rgba(0,255,136,0.5);
+      border:3px solid rgba(0,255,136,0.4);
+
+      transition:transform 0.08s linear;
+      transform-style:preserve-3d;
     }
 
-    .eye {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      animation: blink 7s infinite;
+    .eye{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      animation:blink 7s infinite;
     }
 
-    @keyframes blink {
-      0%, 88%, 100% { clip-path: inset(0 0 0 0); }
-      90%  { clip-path: inset(40% 0 45% 0); }
-      92%  { clip-path: inset(0 0 0 0); }
+    @keyframes blink{
+      0%,88%,100%{
+        clip-path:inset(0 0 0 0);
+      }
+      90%{
+        clip-path:inset(40% 0 45% 0);
+      }
+      92%{
+        clip-path:inset(0 0 0 0);
+      }
     }
 
     /* Speech Bubble */
-    .speech-bubble {
-      position: fixed;
-      top: 185px;
-      right: 85px;
-      background: rgba(0, 0, 0, 0.65);
-      color: #00ffaa;
-      padding: 14px 20px;
-      border-radius: 20px;
-      font-size: 1.02rem;
-      max-width: 260px;
-      box-shadow: 0 0 18px rgba(0, 255, 136, 0.4);
-      border: 2px solid #00ff88;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.6s ease;
-      z-index: 1000;
-      line-height: 1.45;
+    .speech-bubble{
+      position:fixed;
+      top:185px;
+      right:85px;
+      background:rgba(0,0,0,0.65);
+      color:#00ffaa;
+      padding:14px 20px;
+      border-radius:20px;
+      font-size:1.02rem;
+      max-width:260px;
+      box-shadow:0 0 18px rgba(0,255,136,0.4);
+      border:2px solid #00ff88;
+      opacity:0;
+      visibility:hidden;
+      transition:all 0.6s ease;
+      z-index:1000;
+      line-height:1.45;
     }
 
-    .speech-bubble.show {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(-8px);
+    .speech-bubble.show{
+      opacity:1;
+      visibility:visible;
+      transform:translateY(-8px);
     }
 
-    .speech-bubble::after {
-      content: '';
-      position: absolute;
-      top: -14px;
-      right: 35px;
-      border-left: 12px solid transparent;
-      border-right: 12px solid transparent;
-      border-bottom: 14px solid rgba(0, 255, 136, 0.9);
+    header{
+      background:rgba(0,0,0,0.88);
+      backdrop-filter:blur(12px);
+      padding:25px 0;
+      text-align:center;
+      border-bottom:3px solid var(--primary);
+      position:sticky;
+      top:0;
+      z-index:100;
     }
 
-    /* Link PTUNEL - Diperbaiki */
-    .link-box {
-      background: rgba(0, 0, 0, 0.75);
-      border: 2px dashed var(--primary);
-      padding: 20px 25px;
-      border-radius: 20px;
-      font-size: 1.35rem;
-      color: #a0ffc8;
-      word-break: break-all;
-      text-align: center;
-      margin: 25px auto;
-      max-width: 720px;
-      user-select: all;           /* Bisa di-select */
-      cursor: text;
+    .logo{
+      font-family:'Orbitron',sans-serif;
+      font-size:2.7rem;
+      font-weight:700;
+      background:linear-gradient(90deg,#00ff88,#00ffaa);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
     }
 
-    .copy-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      margin-top: 15px;
+    .tagline{
+      font-size:1.1rem;
+      color:#a0ffc8;
+      margin-top:5px;
     }
 
-    .btn-copy {
-      padding: 10px 24px;
-      background: #00ff88;
-      color: #000;
-      border: none;
-      border-radius: 50px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s;
+    .container{
+      max-width:1200px;
+      margin:0 auto;
+      padding:30px 20px;
     }
 
-    .btn-copy:hover {
-      background: #00cc66;
-      transform: translateY(-3px);
+    .hero{
+      text-align:center;
+      padding:100px 20px 70px;
     }
 
-    header { background: rgba(0,0,0,0.88); backdrop-filter: blur(12px); padding: 25px 0; text-align: center; border-bottom: 3px solid var(--primary); position: sticky; top: 0; z-index: 100; }
-
-    .logo {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 3.5rem;
-      font-weight: 700;
-      background: linear-gradient(90deg, #00ff88, #00ffaa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 40px rgba(0, 255, 136, 0.6);
+    .hero h1{
+      font-size:3.2rem;
+      margin-bottom:20px;
+      background:linear-gradient(to right,#00ff88,#00ffcc);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
     }
 
-    .tagline { font-size: 1.1rem; color: #a0ffc8; margin-top: 5px; }
-
-    .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
-    .hero { text-align: center; padding: 100px 20px 70px; }
-
-    .hero h1 {
-      font-size: 3.2rem;
-      margin-bottom: 20px;
-      background: linear-gradient(to right, #00ff88, #00ffcc);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    .status{
+      display:inline-flex;
+      align-items:center;
+      gap:12px;
+      padding:14px 40px;
+      background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+      color:#000;
+      font-weight:700;
+      font-size:1.35rem;
+      border-radius:50px;
+      box-shadow:0 0 30px rgba(0,255,136,0.6);
     }
 
-    .status {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 40px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: #000;
-      font-weight: 700;
-      font-size: 1.35rem;
-      border-radius: 50px;
-      box-shadow: 0 0 30px rgba(0, 255, 136, 0.6);
+    .hero-buttons{
+      margin-top:40px;
+      display:flex;
+      justify-content:center;
+      gap:15px;
+      flex-wrap:wrap;
     }
 
-    .section { margin: 80px 0; }
-    h2 { color: var(--primary); font-size: 2.4rem; text-align: center; margin-bottom: 40px; font-family: 'Orbitron', sans-serif; }
-
-    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 25px; }
-
-    .card {
-      background: rgba(15, 15, 15, 0.85);
-      border: 2px solid var(--primary);
-      border-radius: 24px;
-      padding: 35px 25px;
-      text-align: center;
-      transition: all 0.4s ease;
-      backdrop-filter: blur(8px);
+    .social-btn{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:12px 28px;
+      background:rgba(0,0,0,0.7);
+      border:2px solid var(--primary);
+      border-radius:50px;
+      color:white;
+      text-decoration:none;
+      font-weight:600;
+      transition:all 0.3s;
     }
 
-    .card:hover {
-      transform: translateY(-15px);
-      box-shadow: 0 20px 40px rgba(0, 255, 136, 0.3);
+    .social-btn:hover{
+      transform:translateY(-5px);
+      background:rgba(0,255,136,0.1);
+      border-color:#00ffaa;
     }
 
-    .btn {
-      display: inline-block;
-      padding: 16px 42px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: #000;
-      font-weight: 700;
-      text-decoration: none;
-      border-radius: 50px;
-      font-size: 1.1rem;
-      margin: 10px 8px;
-      box-shadow: 0 8px 20px rgba(0, 255, 136, 0.4);
-      transition: all 0.3s;
+    .social-btn img{
+      width:28px;
+      height:28px;
     }
 
-    .btn:hover {
-      transform: translateY(-6px) scale(1.05);
+    .section{
+      margin:80px 0;
     }
 
-    footer {
-      text-align: center;
-      padding: 50px 20px;
-      background: rgba(0,0,0,0.9);
-      border-top: 2px solid var(--primary);
+    h2{
+      color:var(--primary);
+      font-size:2.4rem;
+      text-align:center;
+      margin-bottom:40px;
+      font-family:'Orbitron',sans-serif;
+    }
+
+    .card-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(340px,1fr));
+      gap:25px;
+    }
+
+    .card{
+      background:rgba(15,15,15,0.85);
+      border:2px solid var(--primary);
+      border-radius:24px;
+      padding:35px 25px;
+      text-align:center;
+      transition:all 0.4s ease;
+    }
+
+    .card:hover{
+      transform:translateY(-15px);
+      box-shadow:0 20px 40px rgba(0,255,136,0.3);
+    }
+
+    .link-box{
+      background:rgba(0,0,0,0.75);
+      border:2px dashed var(--primary);
+      padding:18px;
+      border-radius:15px;
+      font-size:1.1rem;
+      color:#a0ffc8;
+      word-break:break-all;
+      margin:15px 0;
+    }
+
+    .btn{
+      display:inline-block;
+      padding:14px 32px;
+      background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+      color:#000;
+      font-weight:700;
+      text-decoration:none;
+      border-radius:50px;
+      margin:8px 6px;
+      transition:all 0.3s;
+    }
+
+    .btn:hover{
+      transform:translateY(-5px);
+    }
+
+    .copy-btn{
+      padding:12px 30px;
+      background:linear-gradient(135deg,#00ff88,#00cc66);
+      color:#000;
+      border:none;
+      border-radius:50px;
+      font-weight:bold;
+      cursor:pointer;
+      margin-top:12px;
+      transition:all 0.3s;
+    }
+
+    .copy-btn:hover{
+      transform:translateY(-4px);
+      box-shadow:0 8px 20px rgba(0,255,136,0.4);
+    }
+
+    footer{
+      text-align:center;
+      padding:50px 20px;
+      background:rgba(0,0,0,0.9);
+      border-top:2px solid var(--primary);
+    }
+
+    /* Responsive */
+    @media (max-width:768px){
+
+      .logo{
+        font-size:2rem;
+      }
+
+      .hero h1{
+        font-size:2.1rem;
+      }
+
+      .speech-bubble{
+        right:20px;
+        top:180px;
+        max-width:210px;
+        font-size:0.9rem;
+      }
+
+      .eye-container{
+        width:70px;
+        height:70px;
+        right:20px;
+      }
+
+      .card-grid{
+        grid-template-columns:1fr;
+      }
     }
   </style>
 </head>
+
 <body>
 
-  <!-- Video Background -->
+  <!-- VIDEO BACKGROUND -->
   <video id="bg-video" autoplay loop muted playsinline>
     <source src="https://www.image2url.com/r2/default/videos/1779189989412-0cbef2af-0fc8-4a95-a94e-9fd67f496708.mp4" type="video/mp4">
   </video>
 
-  <!-- Mata Admin -->
+  <!-- MATA -->
   <div class="eye-container" id="eyeContainer">
-    <img src="https://cdn.phototourl.com/free/2026-05-19-76162f04-5af9-410c-a039-b2ddf9aa6255.png" alt="Mata Admin" class="eye">
+    <img src="https://cdn.phototourl.com/free/2026-05-19-76162f04-5af9-410c-a039-b2ddf9aa6255.png" class="eye">
   </div>
 
-  <!-- Speech Bubble -->
+  <!-- SPEECH -->
   <div class="speech-bubble" id="speech">
-    terpantau sama admin<br>kamu lagi afk di website 👀
+    terpantau sama admin<br>
+    kamu lagi afk di website
   </div>
 
+  <!-- HEADER -->
   <header>
     <div class="logo">VELQUINTOPIA</div>
-    <div class="tagline">SEASON 3 • GROWTOPIA PRIVATE SERVER</div>
+    <div class="tagline">SEASON 3 - PRIVATE SERVER</div>
   </header>
 
+  <!-- CONTENT -->
   <div class="container">
+
     <div class="hero">
       <h1>Selamat Datang di Velquintopia!</h1>
-      <div class="status">🟢 SERVER ONLINE</div>
+
+      <div class="status">
+        STATUS SERVER : ONLINE
+      </div>
+
+      <div class="hero-buttons">
+
+        <a href="https://discord.gg/Pvvy5SBbc3" class="social-btn" target="_blank">
+          <img src="https://cdn.phototourl.com/free/2026-05-20-de4133b5-2d60-4520-9a15-8b66a5fc5f9d.png">
+          Join Discord
+        </a>
+
+        <a href="https://chat.whatsapp.com/G1D8se7FbQkGp62QCKGNQ7" class="social-btn" target="_blank">
+          <img src="https://cdn.phototourl.com/free/2026-05-20-c132fb44-91d7-48dd-a8fd-0f132a91e35b.png">
+          Join WhatsApp
+        </a>
+
+      </div>
     </div>
 
+    <!-- DOWNLOAD -->
     <div class="section">
-      <h2>Download Client</h2>
+
+      <h2>Download host di bawah</h2>
+
       <div class="card-grid">
+
+        <!-- Android -->
         <div class="card">
-          <h3 style="color:var(--primary); margin-bottom:20px;">Android</h3>
-          <a href="https://www.mediafire.com/file/saih9so43472rc8/VelQuinTopia+[SEASON+3].apk/file" class="btn" target="_blank">Download APK</a>
+          <h3 style="color:var(--primary);margin-bottom:20px;">
+            Android
+          </h3>
+
+          <a href="https://www.mediafire.com/file/saih9so43472rc8/VelQuinTopia+[SEASON+3].apk/file" class="btn" target="_blank">
+            Download APK
+          </a>
         </div>
+
+        <!-- IOS -->
         <div class="card">
-          <h3 style="color:var(--primary); margin-bottom:20px;">iOS</h3>
-          <a href="https://dash.gtps.cloud/ios/2029" class="btn" target="_blank">Install via PTUNEL</a>
+
+          <h3 style="color:var(--primary);margin-bottom:15px;">
+            iOS
+          </h3>
+
+          <a href="https://dash.gtps.cloud/ios/2029" class="btn" target="_blank">
+            Host iOS
+          </a>
+
+          <p style="margin:20px 0 10px 0;color:#00ff88;font-weight:600;">
+            SALIN HOST PTUNEL DI BAWAH INI
+          </p>
+
+          <div class="link-box">
+            https://dash.gtps.cloud/ios/2029
+          </div>
+
+          <button class="copy-btn" onclick="copyLink(https://dash.gtps.cloud/ios/2029)"
+          
+          </button>
+
+          <br>
+
+          <a href="https://www.mediafire.com/file/xeubtjp2zfzhh1k/Velquintopia.txt/file" class="btn" target="_blank" style="margin-top:12px;">
+            Download Vhost
+          </a>
+
         </div>
+
+        <!-- PC -->
         <div class="card">
-          <h3 style="color:var(--primary); margin-bottom:20px;">Windows & macOS</h3>
-          <p><strong>IP :</strong> 91.134.85.13</p>
-          <p><strong>Host :</strong> growtopia1.com</p>
+
+          <h3 style="color:var(--primary);margin-bottom:20px;">
+            Windows & macOS
+          </h3>
+
+          <p>91.134.85.13 growtopia1.com</p>
+          <p>91.134.85.13 growtopia2.com</p>
+          <p>91.134.85.13 www.growtopia1.com</p>
+          <p>91.134.85.13 www.growtopia2.com</p>
+
         </div>
+
       </div>
+
     </div>
 
-    <!-- Host PTUNEL - SUDAH DIPERBAIKI -->
-    <div class="section">
-      <h2>Host PTUNEL</h2>
-      <p style="text-align:center; font-size:1.3rem; margin-bottom:20px;">Salin link di bawah ini:</p>
-      
-      <div class="link-box" id="ptunelLink">
-        https://dash.gtps.cloud/ios/2029
-      </div>
-
-      <div class="copy-container">
-        <button class="btn-copy" onclick="copyLink()">📋 Copy Link</button>
-      </div>
-    </div>
-
-    <div style="text-align:center; margin:50px 0;">
-      <a href="https://chat.whatsapp.com/G1D8se7FbQkGp62QCKGNQ7" class="btn" target="_blank">Join WhatsApp Group</a>
-      <a href="https://www.mediafire.com/file/xeubtjp2zfzhh1k/Velquintopia.txt/file" class="btn" target="_blank">Download Vhost</a>
-    </div>
   </div>
 
+  <!-- FOOTER -->
   <footer>
-    <p>&copy; 2026 Velquintopia • Growtopia Private Server</p>
+    <p>&copy; 2026 Velquintopia - Server By @MalDev</p>
   </footer>
 
   <script>
+
     const video = document.getElementById('bg-video');
     video.volume = 0.4;
 
-    // Mouse Follow Mata
+    // MATA FOLLOW CURSOR
     const eyeContainer = document.getElementById('eyeContainer');
+
     document.addEventListener('mousemove', (e) => {
+
       const rect = eyeContainer.getBoundingClientRect();
-      const eyeCenterX = rect.left + rect.width / 2;
-      const eyeCenterY = rect.top + rect.height / 2;
-      const angleX = (e.clientX - eyeCenterX) / 25;
-      const angleY = (e.clientY - eyeCenterY) / 25;
-      eyeContainer.style.transform = `rotateX(\( {-angleY}deg) rotateY( \){angleX}deg)`;
+
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+
+      const angleX = (e.clientX - cx) / 25;
+      const angleY = (e.clientY - cy) / 25;
+
+      eyeContainer.style.transform =
+      `rotateX(${-angleY}deg) rotateY(${angleX}deg)`;
+
     });
 
-    // Speech Bubble
+    // SPEECH BUBBLE
     const speech = document.getElementById('speech');
-    function showSpeech() {
-      speech.classList.add('show');
-      setTimeout(() => speech.classList.remove('show'), 6500);
-    }
-    setTimeout(showSpeech, 2500);
-    setInterval(showSpeech, 12000);
 
-    // Copy Link Function
-    function copyLink() {
-      const link = "https://dash.gtps.cloud/ios/2029";
-      navigator.clipboard.writeText(link).then(() => {
-        const btn = document.querySelector('.btn-copy');
-        const originalText = btn.innerHTML;
-        btn.innerHTML = "✅ Copied!";
-        btn.style.background = "#00cc66";
-        
-        setTimeout(() => {
-          btn.innerHTML = originalText;
-          btn.style.background = "#00ff88";
-        }, 2000);
-      });
+    function showSpeech(){
+
+      speech.classList.add('show');
+
+      setTimeout(() => {
+        speech.classList.remove('show');
+      },6500);
+
     }
+
+    setTimeout(showSpeech,2500);
+    setInterval(showSpeech,12000);
+
+    // COPY LINK
+    function copyLink(){
+
+      navigator.clipboard.writeText(
+        "https://dash.gtps.cloud/ios/2029"
+      ).then(() => {
+
+        const btn = document.querySelector('.copy-btn');
+
+        const original = btn.innerHTML;
+
+        btn.innerHTML = " Berhasil Dicopy!";
+
+        setTimeout(() => {
+          btn.innerHTML = original;
+        },2500);
+
+      });
+
+    }
+
   </script>
+
 </body>
 </html>
